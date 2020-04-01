@@ -30,4 +30,11 @@ if [ ! -z "$CONN" ]; then
     echo $INDEX > /var/www/html/index.html
   fi
 fi
+if [ ! -z "$BASE_URL" ]; then
+  INDEX=$(cat /var/www/html/index.html)
+  OLD="<base href=\"/\">"
+  NEW="<base href=\"${BASE_URL}\">"
+  INDEX=${INDEX/$OLD/$NEW}
+  echo $INDEX > /var/www/html/index.html
+fi
 nginx -g "daemon off;"
