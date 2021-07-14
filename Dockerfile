@@ -1,17 +1,18 @@
-FROM debian:jessie
+FROM alpine
 
 ENV APP_HOME /usr/src/app
-ENV DEFAULT /etc/nginx/sites-enabled/default
-
-RUN apt-get update && apt-get install -y nginx-full nginx libssl-dev
-RUN apt-get install -y openssl
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ENV DEFAULT /etc/nginx/http.d/default.conf
 
 WORKDIR $APP_HOME
+
+RUN apk update && \
+ apk add --no-cache nginx && \
+ rm -fr /var/cache/apk/*
+
 ADD ./docker $APP_HOME
 ADD ./build /var/www/html
 
 RUN rm $DEFAULT
 RUN mv default $DEFAULT
 
-CMD ./start.sh
+CMD sh start.sh
